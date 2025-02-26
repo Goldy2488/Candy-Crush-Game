@@ -1,15 +1,15 @@
-// Create an audio object in JavaScript
+// Create an audio objects
 let crushSound = new Audio('./sound/candy-land2-101soundboards.mp3');
 let winSound = new Audio('./sound/winSound.mp3');
 let wrongMoveSound = new Audio('./sound/wrongMove.mp3');
 let looseSound = new Audio('./sound/looseSound.mp3');
 
 let targetScore = document.getElementById("target_score");
-let timeLeft;  // Timer variable
-let timerElement = document.getElementById("timer");
 let resultElement = document.getElementById("result");
+let timerElement = document.getElementById("timer");
+let timeLeft;  // Timer variable
 
-const targetScoreObject = {1:300,2:500,3:800,4:1000,5:1200,6:1400,7:1600,8:1800,9:2000};
+const targetScoreObject = {1:1200,2:2000,3:2800,4:3800,5:5000};
 const keys = Object.keys(targetScoreObject);
 const values = Object.values(targetScoreObject);
 
@@ -19,7 +19,8 @@ let rows = 9;
 let columns = 9;
 let score = 0;
 
-let currTile;
+// create tiles for Drag and drop functionality 
+let currTile; 
 let otherTile;
 
 window.onload = () => {
@@ -36,16 +37,20 @@ window.onload = () => {
 // Function to set target score and time
 function setTarget() {
     let randomIndex = Math.floor(Math.random() * Object.keys(targetScoreObject).length - 1) + 1;
-    let target = keys[values.indexOf(randomIndex)];
+    // Use the random index to get the key and value
+    let selectedKey = keys[randomIndex];
+    let selectedValue = targetScoreObject[selectedKey];
 
-    targetScore.innerText = targetScoreObject[randomIndex];
+    // Set the target score to the corresponding value
+    targetScore.innerText = selectedValue;
 
-    timeLeft = target * 60;  // Timer is set based on target score
-    console.log(`Target Score: ${target}, Timer Duration: ${timeLeft} seconds`);
+    timeLeft = selectedKey * 60;  // Timer is set based on target score
+    console.log(`Target Score: ${selectedValue}, Timer Duration: ${timeLeft} seconds`);
 }
 
 // Function to start the countdown timer
 function startTimer() {
+  console.log(timeLeft)
     const timerInterval = setInterval(() => {
       if (timeLeft > 0) {
         timeLeft--;  // Decrease the time left by 1 second
@@ -273,4 +278,28 @@ function generateCandy() {
       board[0][c].src = "./images/" + randomCandy() + ".png";
     }
   }
+}
+
+
+// Prevent further user actions after game ends
+function disableUserActions() {
+  // Disable any draggable or interactive elements
+  // Example: Disable dragging (assuming you have draggable elements)
+  let draggableElements = document.querySelectorAll('.draggable');
+  draggableElements.forEach((element) => {
+    element.setAttribute("draggable", "false");  // Disable drag
+    element.removeEventListener("dragstart", dragStart);  // Remove event listeners
+  });
+  
+  // Disable any buttons or other clickable elements
+  let clickableElements = document.querySelectorAll('.clickable');
+  clickableElements.forEach((element) => {
+    element.disabled = true;  // Disable button or interaction
+  });
+}
+
+// Call disableUserActions when the game ends (win or lose)
+function endGame() {
+  gameOver = true;  // Flag the game as over
+  disableUserActions();  // Disable user actions
 }
