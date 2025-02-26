@@ -120,16 +120,27 @@ function startGame() {
       tile.addEventListener("drop", dragDrop); // dropping the candy over another
       tile.addEventListener("dragend", dragEnd); // after drag process completed, swap candies
 
+      tile.addEventListener("touchstart", dragStart); // click on a candy, initialized drag process
+      tile.addEventListener("touchmove", dragOver); // clicking on candy, moving mouse to drag the candy
+      tile.addEventListener("touchend", dragEnd); // dragging candy onto another candy
+      
+
       document.getElementById("board").append(tile);
       row.push(tile);
     }
     board.push(row);
   }
 }
+  
 
 // Drag functions
 function dragStart() {
   currTile = this;
+
+   // Support for touchstart as well as mouse drag
+   if (e.touches) {
+    currTile = e.touches[0].target;  // Use touch target
+  }
 }
 
 function dragOver(e) {
@@ -147,9 +158,16 @@ function dragDrop() {
 }
 
 function dragEnd() {
+  if (gameOver) return;  // Prevent actions if the game is over
+
   if(currTile.src.includes("blank") || otherTile.src.includes("blank")) {
     return;
   }
+
+// Add touch-specific logic for dragging end
+if (e.changedTouches) {
+  currTile = e.changedTouches[0].target;  // Get the target of touchend
+}
 
   let currCoards = currTile.id.split("-");
   let r = parseInt(currCoards[0]);
@@ -159,6 +177,7 @@ function dragEnd() {
   let r2 = parseInt(otherCoards[0]);
   let c2 = parseInt(otherCoards[1]);
 
+  // handle directions 
   let moveLeft = c2 == c - 1 && r == r2;
   let moveRight = c2 == c + 1 && r == r2; 
   let moveUp = r2 == r - 1 && c == c2;
