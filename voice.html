@@ -1,0 +1,59 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reader with Auto Pause</title>
+</head>
+<body>
+    <h1>📖 Book Reader with Auto Pause 🎙️</h1>
+    <textarea id="bookText" rows="6" cols="50">
+        Once upon a time, in a faraway kingdom, there was a wise old king who loved to read.
+        He spent his days exploring magical books filled with wisdom.
+        One day, he discovered a secret book that changed his life forever.
+    </textarea>
+    <br>
+    <button onclick="startReading()">🔊 Start Reading</button>
+    <button onclick="stopReading()">⏹ Stop</button>
+
+    <script>
+        let lines = [];
+        let index = 0;
+        let speech = new SpeechSynthesisUtterance();
+        let isReading = false;
+
+        function startReading() {
+            if (isReading) return;
+            isReading = true;
+            
+            // Get text and split into lines
+            lines = document.getElementById("bookText").value.split("\n").filter(line => line.trim() !== "");
+            index = 0;
+            readNextLine();
+        }
+
+        function readNextLine() {
+            if (index >= lines.length || !isReading) return;
+
+            speech.text = lines[index];
+            speech.lang = "en-US";
+            speech.rate = 1; // Speed
+            speech.pitch = 1; // Tone
+
+            speech.onend = () => {
+                index++;
+                if (index < lines.length) {
+                    setTimeout(readNextLine, 60000); // Pause for 1 minute before reading the next line
+                }
+            };
+
+            window.speechSynthesis.speak(speech);
+        }
+
+        function stopReading() {
+            isReading = false;
+            window.speechSynthesis.cancel();
+        }
+    </script>
+</body>
+</html> -->
